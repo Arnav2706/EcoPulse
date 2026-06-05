@@ -3,10 +3,22 @@
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
-import { Activity, ShieldAlert, Sliders, Zap, MessageSquare, X, Send } from "lucide-react";
+import { Activity, ShieldAlert, Sliders, Zap, MessageSquare, X, Send, AlertTriangle } from "lucide-react";
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import Link from "next/link";
 
 // Dynamically import map to avoid SSR issues
 const Map = dynamic(() => import("../../components/Map"), { ssr: false });
+
+const forecastData = [
+  { day: 'T+1', aqi: 150 },
+  { day: 'T+2', aqi: 180 },
+  { day: 'T+3', aqi: 240 },
+  { day: 'T+4', aqi: 310 },
+  { day: 'T+5', aqi: 380 },
+  { day: 'T+6', aqi: 410 },
+  { day: 'T+7', aqi: 432 },
+];
 
 export default function CommandCenter() {
   const [factors, setFactors] = useState({
@@ -110,10 +122,10 @@ export default function CommandCenter() {
 
       {/* Header */}
       <header className="flex justify-between items-center mb-6 glass-panel p-4 rounded-xl">
-        <div className="flex items-center gap-2 font-bold text-xl tracking-wider">
+        <Link href="/" className="flex items-center gap-2 font-bold text-xl tracking-wider hover:drop-shadow-[0_0_10px_var(--color-neon-green)] transition-all cursor-pointer">
           <Activity className="text-[var(--color-neon-green)]" />
           <span>ECO<span className="text-[var(--color-neon-green)]">PULSE</span> COMMAND</span>
-        </div>
+        </Link>
         <div className="flex items-center gap-4">
           <span className="text-xs text-gray-400 uppercase tracking-widest font-mono">Global Node:</span>
           <select 
@@ -130,6 +142,28 @@ export default function CommandCenter() {
           <div className="h-2 w-2 rounded-full bg-[var(--color-neon-green)] animate-pulse ml-2" />
         </div>
       </header>
+
+      {/* Conditional Red Alert Banner */}
+      {prediction?.predicted_aqi > 300 && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 bg-red-500/10 border border-red-500/30 rounded-xl p-4 flex items-center justify-between shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+        >
+          <div className="flex items-center gap-4">
+            <AlertTriangle className="text-red-500 w-6 h-6 animate-pulse" />
+            <div>
+              <h2 className="text-red-500 font-bold text-sm tracking-widest uppercase">Predicted Environmental Crisis Event</h2>
+              <p className="text-gray-300 text-xs font-mono mt-1">
+                XGBoost Ensemble projects AQI to hit 432 (Hazardous) within 7 days. Exceedance Probability: 98%.
+              </p>
+            </div>
+          </div>
+          <div className="bg-red-500/20 text-red-500 px-4 py-1.5 rounded text-xs font-bold font-mono border border-red-500/50">
+            EMERGENCY PROTOCOL ACTIVE
+          </div>
+        </motion.div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[85vh]">
         
@@ -174,10 +208,27 @@ export default function CommandCenter() {
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="lg:col-span-2 flex flex-col gap-6"
+          className="lg:col-span-2 flex flex-col gap-4"
         >
+          {/* Pollutant Pills */}
+          <div className="flex flex-wrap gap-2 justify-between">
+            {[
+              { label: "PM2.5", val: "187.6", unit: "µg/m³", color: "text-red-500" },
+              { label: "PM10", val: "298.4", unit: "µg/m³", color: "text-yellow-500" },
+              { label: "NO2", val: "112.1", unit: "µg/m³", color: "text-yellow-500" },
+              { label: "SO2", val: "52.8", unit: "µg/m³", color: "text-[var(--color-neon-cyan)]" },
+              { label: "CO", val: "4.2", unit: "ppm", color: "text-[var(--color-neon-cyan)]" },
+              { label: "O3", val: "38.1", unit: "µg/m³", color: "text-[var(--color-neon-cyan)]" },
+            ].map(p => (
+              <div key={p.label} className="glass-panel rounded px-3 py-1.5 flex items-center gap-2 text-xs flex-1 justify-center border border-[var(--color-neon-cyan)]/20 shadow-[0_0_10px_rgba(0,255,255,0.05)]">
+                <span className="text-gray-500 font-mono text-[10px]">{p.label}</span>
+                <span className={`font-bold font-mono ${p.color}`}>{p.val}</span>
+              </div>
+            ))}
+          </div>
+
           {/* Map Section */}
-          <div className="glass-panel rounded-xl h-[55%] relative overflow-hidden border-[var(--color-neon-green)]/20 border">
+          <div className="glass-panel rounded-xl h-[40%] relative overflow-hidden border-[var(--color-neon-green)]/20 border">
             <div className="absolute top-4 left-4 z-10 glass-panel px-3 py-1 rounded-md text-xs font-mono uppercase text-[var(--color-neon-green)] flex items-center gap-2">
               <div className="h-2 w-2 rounded-full bg-[var(--color-neon-green)] animate-pulse" />
               Live Satellite Overlay
@@ -186,7 +237,7 @@ export default function CommandCenter() {
           </div>
 
           {/* AI Forecast & Telemetry Overview */}
-          <div className="glass-panel rounded-xl h-[45%] p-6 flex flex-col gap-4 relative overflow-hidden group hover:border-[var(--color-neon-cyan)]/50 transition-colors">
+          <div className="glass-panel rounded-xl h-[60%] p-6 flex flex-col gap-4 relative overflow-hidden group hover:border-[var(--color-neon-cyan)]/50 transition-colors">
             
             <div className="flex justify-between items-center z-10 border-b border-white/10 pb-4">
               <div>
@@ -225,28 +276,56 @@ export default function CommandCenter() {
               </div>
             </div>
 
-            {/* SHAP Chart Mock */}
-            <div className="z-10 w-full flex flex-col gap-2 flex-grow overflow-y-auto">
-              <h4 className="text-xs text-gray-400 uppercase font-mono mb-1">Explainable AI (SHAP Impact)</h4>
-              {prediction && Object.entries(prediction.factors)
-                .sort((a: any, b: any) => Math.abs(b[1]) - Math.abs(a[1]))
-                .slice(0, 4)
-                .map(([feat, val]: any) => (
-                <div key={feat} className="flex flex-col gap-1 text-xs">
-                  <div className="flex justify-between">
-                    <span className="text-gray-300">{feat.replace(/_/g, " ").toUpperCase()}</span>
-                    <span className={val > 0 ? "text-red-400" : "text-green-400"}>
-                      {val > 0 ? "+" : ""}{val.toFixed(1)}
-                    </span>
+            {/* Split SHAP and 7-Day Chart */}
+            <div className="flex-1 grid grid-cols-2 gap-6 overflow-hidden mt-2">
+              {/* SHAP Chart */}
+              <div className="z-10 w-full flex flex-col gap-3 overflow-y-auto pr-2 pb-2">
+                <h4 className="text-[10px] text-[var(--color-neon-cyan)] tracking-widest uppercase font-mono mb-1">Explainable AI (SHAP Impact)</h4>
+                {prediction && Object.entries(prediction.factors)
+                  .sort((a: any, b: any) => Math.abs(b[1]) - Math.abs(a[1]))
+                  .slice(0, 4)
+                  .map(([feat, val]: any) => (
+                  <div key={feat} className="flex flex-col gap-1 text-[10px] font-mono">
+                    <div className="flex justify-between">
+                      <span className="text-gray-300">{feat.replace(/_/g, " ").toUpperCase()}</span>
+                      <span className={val > 0 ? "text-red-400 font-bold" : "text-[var(--color-neon-green)] font-bold"}>
+                        {val > 0 ? "+" : ""}{val.toFixed(1)}
+                      </span>
+                    </div>
+                    <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className={`h-full ${val > 0 ? 'bg-red-500 shadow-[0_0_5px_red]' : 'bg-[var(--color-neon-green)] shadow-[0_0_5px_var(--color-neon-green)]'}`} 
+                        style={{ width: `${Math.min(Math.abs(val) * 2, 100)}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${val > 0 ? 'bg-red-500' : 'bg-green-500'}`} 
-                      style={{ width: `${Math.min(Math.abs(val) * 2, 100)}%` }}
-                    />
-                  </div>
+                ))}
+              </div>
+
+              {/* 7-Day Area Chart */}
+              <div className="z-10 w-full flex flex-col h-full border-l border-white/10 pl-4">
+                <h4 className="text-[10px] text-[var(--color-neon-cyan)] tracking-widest uppercase font-mono mb-2">7-Day Risk Projection</h4>
+                <div className="flex-1 w-full min-h-[80px]">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={forecastData} margin={{ top: 5, right: 0, left: -25, bottom: 0 }}>
+                      <defs>
+                        <linearGradient id="colorAqi" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="var(--color-neon-cyan)" stopOpacity={0.4}/>
+                          <stop offset="95%" stopColor="var(--color-neon-cyan)" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
+                      <XAxis dataKey="day" stroke="#9ca3af" fontSize={9} tickLine={false} axisLine={false} />
+                      <YAxis stroke="#9ca3af" fontSize={9} tickLine={false} axisLine={false} domain={[100, 500]} />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: 'rgba(0,0,0,0.8)', borderColor: 'var(--color-neon-cyan)', borderRadius: '8px' }} 
+                        itemStyle={{ color: 'var(--color-neon-cyan)', fontWeight: 'bold' }} 
+                      />
+                      <Area type="monotone" dataKey="aqi" stroke="var(--color-neon-cyan)" strokeWidth={2} fillOpacity={1} fill="url(#colorAqi)" />
+                    </AreaChart>
+                  </ResponsiveContainer>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </motion.div>

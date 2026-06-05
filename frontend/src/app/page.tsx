@@ -12,7 +12,7 @@ export default function Home() {
       <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] bg-[var(--color-neon-cyan)] opacity-10 blur-[120px] rounded-full pointer-events-none" />
 
       {/* Navbar */}
-      <nav className="w-full fixed top-0 z-50 glass-panel border-b-0 border-white/5 px-6 py-4 flex justify-between items-center">
+      <nav className="w-full fixed top-0 z-50 bg-black/40 backdrop-blur-xl border-b border-white/10 px-6 py-4 flex justify-between items-center">
         <motion.div 
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -33,7 +33,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4 pt-20">
+      <main className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center px-4 pt-32">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
