@@ -161,6 +161,36 @@ def predict_aqi(data: EnvironmentData):
 
     interventions = sorted(interventions, key=lambda x: x['impact_score'], reverse=True)
 
+    # --- 7-Day Auto-Regressive Projection Engine ---
+    forecast_7d = []
+    current_aqi = ensemble_aqi
+    sim_data = data.model_copy()
+    
+    for day in range(1, 8):
+        # Simulate a severe weather stagnation event (thermal inversion building up)
+        sim_data.temperature += 0.5
+        sim_data.wind_speed = max(0.5, sim_data.wind_speed - 1.5) # Wind dying down causes accumulation
+        sim_data.traffic_density = min(100.0, sim_data.traffic_density + 3.0)
+        
+        sim_df = prepare_advanced_features(sim_data)
+        
+        # Force the LSTM to recognize the auto-regressive trend
+        sim_df['aqi_lag_1'] = current_aqi
+        sim_df['aqi_lag_2'] = current_aqi * 0.95
+        sim_df['aqi_rolling_7d_avg'] = current_aqi * 0.9
+        
+        day_aqi, _, _ = get_ensemble_prediction(sim_df)
+        
+        # Accumulation penalty for stagnant air (low wind)
+        if sim_data.wind_speed < 5.0:
+            day_aqi *= 1.15
+            
+        forecast_7d.append({
+            "day": f"T+{day}",
+            "aqi": round(day_aqi, 1)
+        })
+        current_aqi = day_aqi
+
     return {
         "predicted_aqi": round(ensemble_aqi, 1),
         "telemetry": {
@@ -170,5 +200,6 @@ def predict_aqi(data: EnvironmentData):
         },
         "risk_level": "Hazardous" if ensemble_aqi > 250 else "High" if ensemble_aqi > 150 else "Moderate" if ensemble_aqi > 50 else "Good",
         "factors": importance,
-        "recommended_interventions": interventions
+        "recommended_interventions": interventions,
+        "forecast_7d": forecast_7d
     }
