@@ -1,0 +1,61 @@
+# ============================================================
+# EcoPulse Space — .gitignore
+# ============================================================
+
+# ─── Secrets & Keys ─────────────────────────────────────────
+backend/.env
+backend/.env.*
+backend/gcp_key.json
+**/*.pem
+**/*.key
+**/.env
+**/.env.local
+**/.env.*.local
+
+# ─── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+.Python
+backend/venv/
+backend/env/
+backend/.venv/
+*.egg-info/
+dist/
+build/
+*.so
+.pytest_cache/
+*.log
+
+# ─── Node / Next.js ─────────────────────────────────────────
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.turbo/
+frontend/next-env.d.ts
+*.tsbuildinfo
+
+# ─── Extracted / Archive folders (not source code) ──────────
+earth_3d_extracted/
+ecopulse_ui_extracted/
+*.zip
+*.tar.gz
+*.rar
+
+# ─── OS artifacts ───────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDE ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── ML model binaries (large files — add via Git LFS if needed) ─
+# backend/models/*.pth
+# backend/models/*.pkl
+# Uncomment above to exclude. Currently keeping for demo purposes.
