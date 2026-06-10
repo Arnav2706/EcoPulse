@@ -17,7 +17,11 @@ const CITIES: any = {
   "New Delhi": [28.6139, 77.2090],
   "Almaty": [43.2220, 76.8512],
   "Mumbai": [19.0760, 72.8777],
-  "London": [51.5074, -0.1278]
+  "London": [51.5074, -0.1278],
+  "San Francisco": [37.7749, -122.4194],
+  "New York": [40.7128, -74.0060],
+  "Tokyo": [35.6762, 139.6503],
+  "Sydney": [-33.8688, 151.2093]
 };
 
 function MapUpdater({ city }: { city: string }) {
