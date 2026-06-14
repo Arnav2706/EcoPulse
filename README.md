@@ -1,48 +1,102 @@
-# EcoPulse AI 🌱
+# EcoPulse Space 🌍🛰️
 
-**An Environmental Risk Forecasting & Intervention Intelligence Platform**
+**AI-Powered Earth Digital Twin & Space Intelligence Platform**
 
-EcoPulse AI predicts environmental risks before they happen, explains why they will happen, and recommends the best actions to prevent them—calculating the exact financial ROI (fines avoided) of each action.
-
-We are building an **Environmental Copilot for Governments and Enterprise**, going far beyond generic AQI dashboards.
+EcoPulse Space is a real-time environmental monitoring and space intelligence platform that combines a **3D Earth Digital Twin**, **ML-powered AQI prediction**, **NASA space data**, and a **LangGraph multi-agent AI swarm** — all in one premium command center UI.
 
 ---
 
-## 🚀 The Core Engine
-1. **Deep Learning Forecasting:** A highly rigorous ensemble model (60% PyTorch LSTM / 40% XGBoost) built on a 365-day dataset integrating Temporal Lags and Satellite NDVI metrics.
-2. **Explainable AI (SHAP):** Transparently breaks down the "Why" behind the risk forecast (e.g., 42% Industrial Emissions, 31% Traffic).
-3. **Intervention Intelligence:** Recommends specific, highly targeted policy actions (e.g., Throttle Factory Output) and calculates the exact Drop in AQI and Dollars Saved in regulatory compliance.
-4. **Digital Twin Simulator:** A sandbox for city planners to dynamically scale variables (Traffic, Wind Speed, Emissions) and instantly watch the neural network recalculate environmental outcomes.
-5. **Generative AI Policy Copilot:** A context-aware chatbot that reads live telemetry to draft executive policy briefings on demand.
+## 🚀 Platform Modules
+
+### 🌍 Digital Twin (`/digital-twin`)
+- Interactive **3D Earth** built with Three.js + React Three Fiber
+- **5 real-time environmental data layers**: Wildfires 🔥 · Flood Risk 💧 · Vegetation 🌿 · Air Quality 🌬️ · Temperature 🌡️
+- GLSL simplex-noise heatmap shaders pinned to real geographic hotspots (California, Australia, Amazon, Congo, South Asia)
+- **Timeline slider (2010–2035)** simulating how crises evolve over time
+- **AI Copilot sidebar** — context-aware Gemini analysis per active layer
+
+### 🛸 Mission Control (`/mission-control`)
+- **City-level AQI prediction** using XGBoost + LSTM ensemble
+- **SHAP explainability** — shows which factors (traffic, emissions, humidity) drive the forecast
+- 7-day auto-regressive forecast with intervention recommendations and $ savings estimate
+- **Leaflet map** with dark tile theme, city fly-to animation
+- City selector: San Francisco · New York · Tokyo · London · Sydney · New Delhi
+
+### ☀️ Space Weather (`/space-weather`)
+- Live **NASA Near-Earth Object (NEO)** tracker with hazard scoring
+- Solar flare & CME event monitoring
+- Geomagnetic storm **Kp index** + Aurora visibility forecast
+- Click any asteroid → **AI Copilot auto-analyzes** that specific object's trajectory
+
+### 🤖 Aether Swarm (`/aether-control`)
+- Direct UI to the **LangGraph 3-agent pipeline**
+- Monitoring Agent → Prediction Agent → Commander Agent
+- Natural language queries about space/environment processed through the swarm
 
 ---
 
-## 🏗️ Architecture Stack
-- **Frontend:** Next.js, React, TailwindCSS, Framer Motion, Leaflet Maps
-- **Backend:** FastAPI, Python, Uvicorn
-- **AI / ML Models:** PyTorch (LSTM), Scikit-Learn (XGBRegressor), SHAP
+## 🧠 AI Architecture
+
+```
+User Query
+    ↓
+Monitoring Agent  →  Fetches live NASA NEO + Space Weather data
+    ↓
+Prediction Agent  →  Gemini 2.5 Flash analyzes data against user query
+    ↓
+Commander Agent   →  Formats professional mission-control style response
+    ↓
+AI Copilot Sidebar (per-page context-aware)
+```
 
 ---
 
-## ⚙️ How to Run Locally
+## 🏗️ Tech Stack
 
-### 1. Start the ML Backend (FastAPI)
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 16, React Three Fiber, Three.js, Leaflet, Framer Motion |
+| **Backend** | FastAPI (Python), Uvicorn |
+| **ML Models** | XGBoost (40%) + PyTorch LSTM (60%) ensemble |
+| **AI Agent** | LangGraph multi-agent swarm (Gemini 2.5 Flash via Vertex AI) |
+| **Explainability** | SHAP values for ML factor attribution |
+| **Space Data** | NASA NeoWs, DONKI (Solar), APOD APIs |
+| **3D Rendering** | GLSL shaders, custom atmosphere/heatmap fragment shaders |
+
+---
+
+## ⚙️ Running Locally
+
+### 1. Backend (FastAPI)
 ```bash
 cd backend
 python -m venv venv
-.\venv\Scripts\activate  # Windows
+.\venv\Scripts\activate        # Windows
+# source venv/bin/activate     # Mac/Linux
 pip install -r requirements.txt
 uvicorn main:app --reload --port 8000
 ```
 
-### 2. Start the Digital Twin (Next.js)
+### 2. Frontend (Next.js)
 ```bash
 cd frontend
 npm install
-npm run dev -p 3001
+npm run dev
+# Open http://localhost:3000
 ```
 
-Access the Global Command Center at: `http://localhost:3001/command-center`
+> **Note**: Copy `backend/.env.example` to `backend/.env` and fill in your `NASA_API_KEY` and GCP credentials.
 
 ---
-*Built by the Neural Ninjas*
+
+## 📄 Environment Variables
+
+```env
+# backend/.env
+NASA_API_KEY=your_nasa_api_key_here
+GOOGLE_CLOUD_PROJECT=your_gcp_project_id
+```
+
+---
+
+*Built by Neural Ninjas*

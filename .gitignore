@@ -5,6 +5,7 @@
 # ─── Secrets & Keys ─────────────────────────────────────────
 backend/.env
 backend/.env.*
+!backend/.env.example
 backend/gcp_key.json
 **/*.pem
 **/*.key
