@@ -1,102 +1,276 @@
-# EcoPulse Space 🌍🛰️
+# 🌍 EcoPulse Space
 
-**AI-Powered Earth Digital Twin & Space Intelligence Platform**
+> **AI-Powered Earth Digital Twin & Space Intelligence Platform**
+>
+> Real-time environmental monitoring + NASA space data + LangGraph multi-agent AI swarm — all in one premium command center.
 
-EcoPulse Space is a real-time environmental monitoring and space intelligence platform that combines a **3D Earth Digital Twin**, **ML-powered AQI prediction**, **NASA space data**, and a **LangGraph multi-agent AI swarm** — all in one premium command center UI.
+<div align="center">
+  <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" />
+  <img src="https://img.shields.io/badge/FastAPI-0.115-009688?style=for-the-badge&logo=fastapi" />
+  <img src="https://img.shields.io/badge/Gemini-2.5_Flash-4285F4?style=for-the-badge&logo=google" />
+  <img src="https://img.shields.io/badge/Three.js-r165-000000?style=for-the-badge&logo=three.js" />
+  <img src="https://img.shields.io/badge/LangGraph-0.2-FF6B35?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker" />
+</div>
 
 ---
 
-## 🚀 Platform Modules
+## 🐳 Quick Start with Docker (Recommended)
 
-### 🌍 Digital Twin (`/digital-twin`)
-- Interactive **3D Earth** built with Three.js + React Three Fiber
-- **5 real-time environmental data layers**: Wildfires 🔥 · Flood Risk 💧 · Vegetation 🌿 · Air Quality 🌬️ · Temperature 🌡️
-- GLSL simplex-noise heatmap shaders pinned to real geographic hotspots (California, Australia, Amazon, Congo, South Asia)
-- **Timeline slider (2010–2035)** simulating how crises evolve over time
-- **AI Copilot sidebar** — context-aware Gemini analysis per active layer
+> **Prerequisites**: Docker Desktop installed and running.
 
-### 🛸 Mission Control (`/mission-control`)
-- **City-level AQI prediction** using XGBoost + LSTM ensemble
-- **SHAP explainability** — shows which factors (traffic, emissions, humidity) drive the forecast
-- 7-day auto-regressive forecast with intervention recommendations and $ savings estimate
-- **Leaflet map** with dark tile theme, city fly-to animation
-- City selector: San Francisco · New York · Tokyo · London · Sydney · New Delhi
+### 1. Clone the repo
+```bash
+git clone https://github.com/Arnav2706/EcoPulse.git
+cd EcoPulse
+```
 
-### ☀️ Space Weather (`/space-weather`)
-- Live **NASA Near-Earth Object (NEO)** tracker with hazard scoring
-- Solar flare & CME event monitoring
-- Geomagnetic storm **Kp index** + Aurora visibility forecast
-- Click any asteroid → **AI Copilot auto-analyzes** that specific object's trajectory
+### 2. Set up environment variables
+```bash
+cp backend/.env.example backend/.env
+# Edit backend/.env and fill in:
+#   NASA_API_KEY   → get free at https://api.nasa.gov/
+#   GOOGLE_CLOUD_PROJECT → your GCP project ID
+```
 
-### 🤖 Aether Swarm (`/aether-control`)
-- Direct UI to the **LangGraph 3-agent pipeline**
-- Monitoring Agent → Prediction Agent → Commander Agent
-- Natural language queries about space/environment processed through the swarm
+### 3. Add GCP credentials
+```bash
+# Place your GCP service account JSON at:
+backend/gcp_key.json
+# (This file is gitignored — never commit it)
+```
+
+### 4. Launch everything
+```bash
+docker compose up --build
+```
+
+| Service | URL |
+|---|---|
+| 🌍 Frontend (Next.js) | http://localhost:3000 |
+| ⚙️ Backend (FastAPI) | http://localhost:8000 |
+| 📖 API Docs (Swagger) | http://localhost:8000/docs |
+
+### Stop
+```bash
+docker compose down
+```
+
+---
+
+## 💻 Local Development (without Docker)
+
+<details>
+<summary><strong>Backend (FastAPI + ML)</strong></summary>
+
+```bash
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate
+.\venv\Scripts\activate        # Windows
+# source venv/bin/activate     # Mac/Linux
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Copy env file
+cp .env.example .env
+# Fill in NASA_API_KEY and GOOGLE_CLOUD_PROJECT in .env
+
+# Start server
+uvicorn main:app --reload --port 8000
+# → http://localhost:8000
+# → API docs: http://localhost:8000/docs
+```
+</details>
+
+<details>
+<summary><strong>Frontend (Next.js 16)</strong></summary>
+
+```bash
+cd frontend
+
+# Install dependencies
+npm install
+
+# Start dev server
+npm run dev
+# → http://localhost:3000
+```
+</details>
+
+---
+
+## 🗺️ Platform Modules
+
+### 🌍 Digital Twin — `/digital-twin`
+The centerpiece of EcoPulse. A photorealistic interactive **3D Earth** built with Three.js + React Three Fiber.
+
+**Features:**
+- **5 live environmental data layers** — toggle independently:
+  - 🔥 **Wildfires** — California, Australia, Siberia hotspots
+  - 💧 **Flood Risk** — Bangladesh, Netherlands, Louisiana zones
+  - 🌿 **Vegetation** — Amazon, Congo, Borneo, Boreal forest carbon density
+  - 🌬️ **Air Quality** — India, China, Eastern Europe pollution corridors
+  - 🌡️ **Temperature** — Global anomaly heatmap
+- **GLSL simplex-noise shaders** — heatmaps rendered as GPU fragment shaders, pinned to real geographic coordinates
+- **Timeline slider (2010–2035)** — simulates how crises evolve and spread over 25 years
+- **Orbital debris field** — animated particle system representing satellite/debris tracks
+- **AI Copilot sidebar** — context-aware Gemini 2.5 analysis per active layer + per selected city
+
+---
+
+### 🛸 Mission Control — `/mission-control`
+City-level **AQI prediction** with full ML explainability.
+
+**Features:**
+- **Hybrid ML model**: XGBoost (40%) + PyTorch LSTM (60%) ensemble
+- **Input features**: Temperature, humidity, wind speed, traffic density, industrial emissions, green cover index, satellite NDVI
+- **SHAP explainability panel** — bar chart showing which factors drive the forecast (e.g., "42% Industrial Emissions, 31% Traffic")
+- **7-day auto-regressive forecast** with confidence intervals
+- **Intervention recommendations** with estimated ΔCO₂ reductions and $ regulatory savings
+- **Leaflet map** with dark tile theme — flies to selected city on change
+- **City profiles**: San Francisco · New York · Tokyo · London · Sydney · New Delhi · Beijing
+
+---
+
+### ☀️ Space Weather — `/space-weather`
+Live feed of NASA data on threats from space.
+
+**Features:**
+- **Near-Earth Object (NEO) tracker** — live NASA API data with hazard scoring, miss distance, size estimates
+- **Solar flare monitor** — GOES X-ray flux data with flare class (B/C/M/X)
+- **CME (Coronal Mass Ejection)** event log with Earth-impact probability
+- **Geomagnetic Kp index** — 3-hour resolution storm intensity gauge
+- **Aurora visibility forecast** — predicted visibility latitude bands
+- **Click any NEO** → AI Copilot auto-generates a full telemetry analysis of that specific object
+
+---
+
+### 🤖 Aether Swarm — `/aether-control`
+Direct interface to the **LangGraph multi-agent pipeline**.
+
+**Features:**
+- Visualizes the **3-agent swarm** in real time: Monitor → Predict → Command
+- Natural language queries about any space or environmental topic
+- Agent node status indicators — shows which agent is currently processing
+- Full response streaming from the Gemini 2.5 Flash model
 
 ---
 
 ## 🧠 AI Architecture
 
 ```
-User Query
-    ↓
-Monitoring Agent  →  Fetches live NASA NEO + Space Weather data
-    ↓
-Prediction Agent  →  Gemini 2.5 Flash analyzes data against user query
-    ↓
-Commander Agent   →  Formats professional mission-control style response
-    ↓
-AI Copilot Sidebar (per-page context-aware)
+User Query (natural language)
+          │
+          ▼
+  ┌───────────────────┐
+  │  Monitoring Agent  │  ← Fetches live NASA NEO + DONKI solar weather data
+  └────────┬──────────┘
+           │
+          ▼
+  ┌───────────────────┐
+  │  Prediction Agent  │  ← Gemini 2.5 Flash analyzes data vs user's context
+  └────────┬──────────┘
+           │
+          ▼
+  ┌───────────────────┐
+  │  Commander Agent  │  ← Formats mission-control style response
+  └────────┬──────────┘
+           │
+          ▼
+  AI Copilot Sidebar (per-page, context-aware)
 ```
 
 ---
 
 ## 🏗️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| **Frontend** | Next.js 16, React Three Fiber, Three.js, Leaflet, Framer Motion |
-| **Backend** | FastAPI (Python), Uvicorn |
-| **ML Models** | XGBoost (40%) + PyTorch LSTM (60%) ensemble |
-| **AI Agent** | LangGraph multi-agent swarm (Gemini 2.5 Flash via Vertex AI) |
-| **Explainability** | SHAP values for ML factor attribution |
-| **Space Data** | NASA NeoWs, DONKI (Solar), APOD APIs |
-| **3D Rendering** | GLSL shaders, custom atmosphere/heatmap fragment shaders |
+| Layer | Technology | Purpose |
+|---|---|---|
+| **Frontend Framework** | Next.js 16 + React 19 | App shell, routing, SSR |
+| **3D Rendering** | Three.js + React Three Fiber | Earth globe, shaders, debris |
+| **GLSL Shaders** | Custom fragment shaders | Heatmaps, atmosphere, nebula |
+| **Maps** | Leaflet.js | 2D city map in Mission Control |
+| **Animations** | Framer Motion | Page transitions, micro-animations |
+| **Backend** | FastAPI + Uvicorn | REST API, ML serving |
+| **ML — Tabular** | XGBoost (scikit-learn) | AQI feature importance |
+| **ML — Temporal** | PyTorch LSTM | Time-series AQI forecasting |
+| **Explainability** | SHAP | Feature attribution visualization |
+| **AI Agent** | LangGraph 0.2 | Multi-agent swarm orchestration |
+| **LLM** | Gemini 2.5 Flash (Vertex AI) | Natural language analysis |
+| **Space Data** | NASA NeoWs, DONKI, APOD APIs | Live NEO + solar weather |
+| **Containerization** | Docker + Docker Compose | One-command deployment |
 
 ---
 
-## ⚙️ Running Locally
+## 📁 Project Structure
 
-### 1. Backend (FastAPI)
-```bash
-cd backend
-python -m venv venv
-.\venv\Scripts\activate        # Windows
-# source venv/bin/activate     # Mac/Linux
-pip install -r requirements.txt
-uvicorn main:app --reload --port 8000
 ```
-
-### 2. Frontend (Next.js)
-```bash
-cd frontend
-npm install
-npm run dev
-# Open http://localhost:3000
+ecopulse-space/
+├── docker-compose.yml          # Orchestrate both services
+├── backend/
+│   ├── Dockerfile
+│   ├── main.py                 # FastAPI app + all API routes
+│   ├── agents_swarm.py         # LangGraph multi-agent swarm
+│   ├── space_apis.py           # NASA API integrations
+│   ├── requirements.txt
+│   └── .env.example            # Environment variable template
+└── frontend/
+    ├── Dockerfile
+    ├── package.json
+    └── src/
+        ├── app/
+        │   ├── page.tsx                    # Landing page
+        │   ├── digital-twin/page.tsx       # 3D Earth + env layers
+        │   ├── mission-control/page.tsx    # AQI prediction + Leaflet map
+        │   ├── space-weather/page.tsx      # NASA NEO + solar monitor
+        │   └── aether-control/page.tsx     # Aether Swarm UI
+        └── components/
+            ├── Globe.tsx           # Three.js Earth + GLSL shaders
+            ├── AiCopilot.tsx       # AI Copilot sidebar
+            ├── NebulaShader.tsx    # Animated starfield shader
+            ├── Map.tsx             # Leaflet map wrapper
+            ├── TopNavBar.tsx       # Navigation
+            └── Footer.tsx          # Status bar + telemetry ticker
 ```
-
-> **Note**: Copy `backend/.env.example` to `backend/.env` and fill in your `NASA_API_KEY` and GCP credentials.
 
 ---
 
-## 📄 Environment Variables
+## 🔌 API Reference
 
-```env
-# backend/.env
-NASA_API_KEY=your_nasa_api_key_here
-GOOGLE_CLOUD_PROJECT=your_gcp_project_id
-```
+| Endpoint | Method | Description |
+|---|---|---|
+| `/health` | GET | Health check |
+| `/predict` | POST | AQI prediction (city + features) |
+| `/space/neo` | GET | Live Near-Earth Objects from NASA |
+| `/space/solar-weather` | GET | Solar flares, CMEs, Kp index |
+| `/agent/query` | POST | Run multi-agent swarm query |
+
+Full interactive docs: **http://localhost:8000/docs**
 
 ---
 
-*Built by Neural Ninjas*
+## 🔑 Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `NASA_API_KEY` | ✅ | Free key from https://api.nasa.gov/ |
+| `GOOGLE_CLOUD_PROJECT` | ✅ | Your GCP project ID for Vertex AI |
+| `GOOGLE_CLOUD_LOCATION` | Optional | Default: `us-central1` |
+| `GOOGLE_APPLICATION_CREDENTIALS` | ✅ | Path to service account JSON |
+
+---
+
+## 🙌 Built By
+
+**Neural Ninjas** — Built for [Hackathon Name]
+
+---
+
+<div align="center">
+  <sub>⚡ Powered by Gemini 2.5 Flash · NASA Open APIs · Three.js · LangGraph</sub>
+</div>
