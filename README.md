@@ -267,10 +267,7 @@ Full interactive docs: **http://localhost:8000/docs**
 
 ## 🙌 Built By
 
-**Neural Ninjas** — Built for [Hackathon Name]
+**Neural Ninjas**
 
 ---
 
-<div align="center">
-  <sub>⚡ Powered by Gemini 2.5 Flash · NASA Open APIs · Three.js · LangGraph</sub>
-</div>
